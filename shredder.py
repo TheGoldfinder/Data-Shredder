@@ -93,7 +93,7 @@ class App(Tk):
 
             writeToFile = ""
             firstTime = True
-            for element in splitBinaryCode:
+            for dex in splitBinaryCode:
                 if firstTime:
                     writeToFile = writeToFile + f"\\"
                     firstTime = False
