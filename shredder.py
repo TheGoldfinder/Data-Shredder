@@ -2,7 +2,6 @@ from tkinter import END, Button, Checkbutton, IntVar, Label, Entry, Tk
 from random import randrange
 from os import path, walk
 from time import sleep
-from xmlrpc.server import SimpleXMLRPCDispatcher
 
 
 class App(Tk):
@@ -75,33 +74,38 @@ class App(Tk):
 
         print(f"{fileNames}\n\n")
 
-        sleep(1)
-
         for fileName in fileNames:
             with open(f"{path}\{fileName}", "rb") as binaryFile:
                 binaryCode = binaryFile.read()
 
-                sleep(1)
-
-                if str(binaryCode) == "b''":
-                    pass
-
+            try:
+                print(f"Name: {fileName}")
                 print(f"\n{binaryCode}\n")
                 binaryCode = str(binaryCode).replace("b'", "")
                 binaryCode = str(binaryCode).replace("'", "")
                 splitBinaryCode = str(binaryCode).split("\\")
+                for element in splitBinaryCode:
+                    if element == "" or " " in element:
+                        splitBinaryCode.pop(element)
                 print(str(splitBinaryCode))
+            except:
+                pass
 
-                with open(f"{path}\{fileName}", "wb") as writeBinaryFile:
-                    firstTime = True
-                    for element in splitBinaryCode:
-                        if firstTime:
-                            writeBinaryFile.write(bytes(f"\\"))
-                            firstTime = False
+            writeToFile = ""
+            firstTime = True
+            for element in splitBinaryCode:
+                if firstTime:
+                    writeToFile = writeToFile + f"\\"
+                    firstTime = False
 
-                        writeBinaryFile.write(
-                            bytes(f"{splitBinaryCode[randrange(0, len(splitBinaryCode)-1)]}\\", "utf-8"))
-                    writeBinaryFile.write(bytes(f"\\"))
+                element = splitBinaryCode[randrange(
+                    0, len(splitBinaryCode)-1)]
+                splitBinaryCode = splitBinaryCode.remove(element)
+
+                writeToFile = writeToFile + f"{element}\\"
+
+            with open(f"{path}\{fileName}", "wb") as writeBinaryFile:
+                writeBinaryFile.write(bytes(writeToFile))
 
 
 if __name__ == '__main__':
