@@ -1,7 +1,6 @@
-from tkinter import END, Button, Checkbutton, IntVar, Label, Entry, Tk
+from tkinter import END, Button, Checkbutton, IntVar, StringVar, Label, Entry, Tk
 from random import randrange
 from os import path, walk
-from time import sleep
 
 
 class App(Tk):
@@ -9,12 +8,14 @@ class App(Tk):
         super().__init__()
 
         self.checkBoxValue = IntVar()
+        self.feedbackText = StringVar()
 
         # Create window
         self.geometry("300x400")
         self.title("Shredder")
         self.resizable(False, False)
 
+        # Window Elements
         self.label = Label(self, text="Path")
         self.label.config(font=("Arial", 12))
         self.label.place(relx=0.13, rely=0.25, anchor="center")
@@ -23,8 +24,10 @@ class App(Tk):
         self.textBox.config(font=("Arial", 12))
         self.textBox.place(relx=0.5, rely=0.3, anchor="center")
 
-        self.feedback = Label(self, text="", foreground="#d10e0e")
-        self.feedback.config(font=("Arial", 12,))
+        self.feedback = Label(
+            self, textvariable=self.feedbackText, foreground="#d10e0e")
+        self.feedback.config(font=("Arial", 12))
+        self.feedback.place(relx=0.5, rely=0.55, anchor="center")
 
         self.shredderBtn = Button(
             self, width=12, height=3, text="Shredder", command=self.shredder)
@@ -63,8 +66,11 @@ class App(Tk):
         path = self.getAndCheckInputFromTextField()
         shouldDeleteFilesAfter = self.getCheckBoxValue()
 
+        self.feedback.text = ""
+
         if type(path) == bool:
             print("False input")
+            self.feedbackText.set("False input")
             return
 
         fileNames = []
@@ -83,7 +89,7 @@ class App(Tk):
             binaryCode = str(binaryCode).replace("b'", "")
             binaryCode = str(binaryCode).replace("'", "")
 
-            # Try check if emty file
+            # Try check if file is emty
             try:
                 splitBinaryCode = str(binaryCode).split("\\")
             except:
@@ -92,11 +98,12 @@ class App(Tk):
             for element in splitBinaryCode:
                 if element == "" or " " in element:
                     splitBinaryCode.remove(element)
+
             print(str(splitBinaryCode))
 
             writeToFile = ""
             firstTime = True
-            for dex in splitBinaryCode:
+            for binaryIndex in splitBinaryCode:
                 if firstTime:
                     writeToFile = writeToFile + f"\\"
                     firstTime = False
