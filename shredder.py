@@ -55,24 +55,27 @@ class App(Tk):
             return False
 
     def getCheckBoxValue(self):
+        # get checkBox value
         value = self.checkBoxValue.get()
 
-        if value == 1:
-            return True
-        elif value == 0:
-            return False
+        # converts from int to bool and returns it
+        return bool(value)
 
     def shredder(self):
+        # get values from inputs
         path = self.getAndCheckInputFromTextField()
         shouldDeleteFilesAfter = self.getCheckBoxValue()
 
+        # resets feedback fieldd
         self.feedback.text = ""
 
+        # sort false path out
         if type(path) == bool:
             print("False input")
             self.feedbackText.set("False input")
             return
 
+        # get all files in path
         fileNames = []
         for (root, dirs, files) in walk(path):
             fileNames = files
@@ -81,11 +84,13 @@ class App(Tk):
         print(f"{fileNames}\n\n")
 
         for fileName in fileNames:
+            # read all bytes
             with open(f"{path}\{fileName}", "rb") as binaryFile:
                 binaryCode = binaryFile.read()
 
             print(f"Name: {fileName}")
             print(f"\n{binaryCode}\n")
+            # replace the python byte chars
             binaryCode = str(binaryCode).replace("b'", "")
             binaryCode = str(binaryCode).replace("'", "")
 
@@ -95,12 +100,14 @@ class App(Tk):
             except:
                 continue
 
+            # check if emty elements in list
             for element in splitBinaryCode:
                 if element == "" or " " in element:
                     splitBinaryCode.remove(element)
 
             print(str(splitBinaryCode))
 
+            # smash the list randomized into a string
             writeToFile = ""
             firstTime = True
             for binaryIndex in splitBinaryCode:
@@ -114,6 +121,7 @@ class App(Tk):
 
                 writeToFile = writeToFile + f"{element}\\"
 
+            # write the smashed string to file
             with open(f"{path}\{fileName}", "wb") as writeBinaryFile:
                 writeBinaryFile.write(bytes(writeToFile, "utf-8"))
 
