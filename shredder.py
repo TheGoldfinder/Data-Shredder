@@ -1,6 +1,6 @@
 from tkinter import END, Button, Checkbutton, IntVar, StringVar, Label, Entry, Tk
 from random import randrange
-from os import path, walk
+from os import path, walk, remove as os_remove
 
 
 class App(Tk):
@@ -124,6 +124,9 @@ class App(Tk):
             # write the smashed string to file
             with open(f"{path}\{fileName}", "wb") as writeBinaryFile:
                 writeBinaryFile.write(bytes(writeToFile, "utf-8"))
+
+            if shouldDeleteFilesAfter:
+                os_remove(f"{path}\{fileName}")
 
             self.feedbackText.set("Done!")
 
