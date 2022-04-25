@@ -78,18 +78,21 @@ class App(Tk):
             with open(f"{path}\{fileName}", "rb") as binaryFile:
                 binaryCode = binaryFile.read()
 
+            print(f"Name: {fileName}")
+            print(f"\n{binaryCode}\n")
+            binaryCode = str(binaryCode).replace("b'", "")
+            binaryCode = str(binaryCode).replace("'", "")
+
+            # Try check if emty file
             try:
-                print(f"Name: {fileName}")
-                print(f"\n{binaryCode}\n")
-                binaryCode = str(binaryCode).replace("b'", "")
-                binaryCode = str(binaryCode).replace("'", "")
                 splitBinaryCode = str(binaryCode).split("\\")
-                for element in splitBinaryCode:
-                    if element == "" or " " in element:
-                        splitBinaryCode.pop(element)
-                print(str(splitBinaryCode))
             except:
-                pass
+                continue
+
+            for element in splitBinaryCode:
+                if element == "" or " " in element:
+                    splitBinaryCode.remove(element)
+            print(str(splitBinaryCode))
 
             writeToFile = ""
             firstTime = True
@@ -100,12 +103,12 @@ class App(Tk):
 
                 element = splitBinaryCode[randrange(
                     0, len(splitBinaryCode)-1)]
-                splitBinaryCode = splitBinaryCode.remove(element)
+                splitBinaryCode.remove(element)
 
                 writeToFile = writeToFile + f"{element}\\"
 
             with open(f"{path}\{fileName}", "wb") as writeBinaryFile:
-                writeBinaryFile.write(bytes(writeToFile))
+                writeBinaryFile.write(bytes(writeToFile, "utf-8"))
 
 
 if __name__ == '__main__':
