@@ -81,14 +81,14 @@ class App(Tk):
             fileNames = files
             break
 
-        print(f"{fileNames}\n\n")
+        print(f"{fileNames}")
 
         for fileName in fileNames:
             # read all bytes
             with open(f"{path}\{fileName}", "rb") as binaryFile:
                 binaryCode = binaryFile.read()
 
-            print(f"Name: {fileName}")
+            print(f"\n\nName: {fileName}")
             print(f"\n{binaryCode}\n")
             # replace the python byte chars
             binaryCode = str(binaryCode).replace("b'", "")
@@ -124,6 +124,8 @@ class App(Tk):
             # write the smashed string to file
             with open(f"{path}\{fileName}", "wb") as writeBinaryFile:
                 writeBinaryFile.write(bytes(writeToFile, "utf-8"))
+
+            self.feedbackText.set("Done!")
 
 
 if __name__ == '__main__':
